@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # Heroku / Production hosts
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split() or ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ['*']
 
 # ------------------------
 # SECRET KEY (Move to env)
