@@ -52,7 +52,7 @@ urlpatterns = [
 
     # Dashboard for contact messages
     path('dashboard/', views.dashboard_view, name='dashboard'),
-    path('about/', views.about, name='About'),
+    path('about/', views.about, name='about'),
     path("stories/", views.story_list, name="story_list"),
     path("stories/add/", views.story_add, name="story_add"),
     path("stories/<int:pk>/edit/", views.story_edit, name="story_edit"),
