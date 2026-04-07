@@ -1,0 +1,161 @@
+{% extends "offline_base.html" %}
+{% load static %}
+
+{% block content %}
+
+ 
+<div class="container-fluid py-5 mt-5">
+    <div class="card shadow rounded-4 ">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Testimonial</h2>
+            <!-- Add Product Button -->
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                + Add Product
+            </button>
+        </div>
+
+     <div class="card-body">
+    <div class="table-responsive">
+        <table class="table table-bordered" id="table">
+            <thead class="table-border">
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>Description</th>
+                    <th>Image</th>
+                    <th class="text-center">Edit</th>
+                    <th class="text-center">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in testimonials %}
+                <tr>
+                    <td>{{ t.name }}</td>
+                    <td>{{ t.role }}</td>
+                    <td>{{ t.content }}</td>
+                    <td>
+                        {% if t.image %}
+                            <a href="{{ t.image.url }}" target="_blank">See image</a>
+                        {% else %}
+                            <span class="text-muted">No image</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editTestimonialModal{{ t.id }}">
+                            Edit
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTestimonialModal{{ t.id }}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editTestimonialModal{{ t.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form method="POST" enctype="multipart/form-data" action="{% url 'edit_testimonial' t.id %}">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Testimonial</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="name" class="form-control" value="{{ t.name }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Role</label>
+                                        <input type="text" name="role" class="form-control" value="{{ t.role }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="content" class="form-control">{{ t.content }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Image</label>
+                                        {% if t.image %}
+                                            <p>
+                                                Current: 
+                                                <a href="{{ t.image.url }}" target="_blank">See image</a>
+                                            </p>
+                                        {% endif %}
+                                        <input type="file" name="image" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete Modal -->
+                <div class="modal fade" id="deleteTestimonialModal{{ t.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form method="POST" action="{% url 'delete_testimonial' t.id %}">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Delete Testimonial</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete <strong>{{ t.name }}</strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    </div></div>
+<!-- Add Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" required />
+
+                        <label class="mt-3 form-label">Role</label>
+                        <input type="text" name="role" class="form-control" />
+
+                        <label class="mt-3 form-label">Description</label>
+                        <textarea class="form-control" name="content"></textarea>
+
+                        <label class="mt-3 form-label">Image</label>
+                        <input type="file" name="image" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

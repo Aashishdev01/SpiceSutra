@@ -1,0 +1,52 @@
+ {% extends "offline_base.html" %}
+{% load static %}
+{% block content %}
+ <div class="container-fluid">
+        <div class="cards-grid">
+          <div class="stat-card fade-in-up" style="animation-delay: 0.1s;">
+            <div class="card-icon">
+              <i class="fas fa-pepper-hot"></i>
+            </div>
+            <h5 class="card-title">Total Spices</h5>
+            <h3 class="card-value">142</h3>
+            <p class="card-change text-success">
+              <i class="fas fa-arrow-up me-1"></i> 12% from last month
+            </p>
+          </div>
+          
+          <div class="stat-card fade-in-up" style="animation-delay: 0.2s;">
+            <div class="card-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <h5 class="card-title">Recipes</h5>
+            <h3 class="card-value">87</h3>
+            <p class="card-change text-success">
+              <i class="fas fa-arrow-up me-1"></i> 5% from last month
+            </p>
+          </div>
+          
+          <div class="stat-card fade-in-up" style="animation-delay: 0.3s;">
+            <div class="card-icon">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h5 class="card-title">Orders</h5>
+            <h3 class="card-value">324</h3>
+            <p class="card-change text-danger">
+              <i class="fas fa-arrow-down me-1"></i> 3% from last month
+            </p>
+          </div>
+          
+          <div class="stat-card fade-in-up" style="animation-delay: 0.4s;">
+            <div class="card-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h5 class="card-title">Customers</h5>
+            <h3 class="card-value">1,248</h3>
+            <p class="card-change text-success">
+              <i class="fas fa-arrow-up me-1"></i> 8% from last month
+            </p>
+          </div>
+        </div></div>
+      </div>.
+      
+{% endblock %}

@@ -1,0 +1,750 @@
+  {% extends "index.html" %}  
+    {% load static %}
+{% block content %}
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+ 
+     .nav-item1:hover,
+    .nav-item2:hover,
+    .nav-item3:hover {
+      text-decoration: underline;
+    
+      font-family: "Montserrat", sans-serif;
+      font: size 20px !important;
+      color: #FF9B4D;
+    }
+    .nav-item1,
+    .nav-item2,
+    .nav-item3{
+      font-family: "Montserrat", sans-serif;
+      font: size 20px !important;
+      color: #000000;
+    }
+    .nav-link{
+      font-family: "Montserrat", sans-serif;
+      font: size 20px !important;
+      color: #FF9B4D;
+      font-weight: 600;
+
+    }
+    .nav-link:hover{
+      font-family: "Montserrat", sans-serif;
+      font: size 20px !important;
+      color: #FF9B4D;
+font-weight: 600;
+    }
+
+   
+   .nav-link {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: 20px;
+    font-weight: 600;
+    color: #1F2937;
+    text-decoration: none;
+    background: 0 0;
+    border: 0;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+  
+    /* footer {
+      font-family: "Montserrat", sans-serif;
+     background-color: #0A1F44;
+      color: white!important;
+      padding: 30px 0;
+    }
+.footericon{
+  height:40px;
+  width:40px;
+
+}  */ */
+  
+.navbar-brand {
+      font-family: "Montserrat", sans-serif;
+      display: block;
+      padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+      font-size: var(--bs-nav-link-font-size);
+      font-weight: var(--bs-nav-link-font-weight);
+      color: rgb(0 0 0 / 55%);
+      text-decoration: none;
+      background: 0 0;
+      border: 0;
+      transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+
+    }
+
+    .navbar-toggler {
+      color: rgb(255, 255, 255);
+    }
+
+    .navbar-toggler-icon {
+      color: #000000;
+    }
+
+
+
+
+   .rhytm{
+       font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      color:#D1D5DB;  
+      max-width: 313px;
+    }
+    /* start footer */
+   .footerbanner{
+  width: 40px!important;
+  height: 40px!important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ffffff; /* light grey */
+  color: #FF9B4D; /* white with 10% opacity */
+  font-size: 16px;
+  margin-right: 10px;
+  transition: background-color 0.3s, color 0.3s;
+}
+.harmony{
+       font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      color:#D1D5DB;  
+      max-width: 313px;
+    }
+
+  .font-weight-bold {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color:white;
+  }
+    .text-decoration-none1{
+      font-family: "Montserrat", sans-serif;
+      font-size: 16px;
+      color:#D1D5DB;
+      
+      
+    }
+      .footercopy {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: #9CA3AF;
+  }
+   .footercopy{
+      font-family: "Montserrat", sans-serif;
+      font-size: 14px;
+      color:#9CA3AF
+      
+
+    }
+    
+
+   /* end footer */
+   /* space */
+.space{
+padding-top:80px;
+padding-bottom: 80px;
+
+   }
+     html, body {
+  overflow-x: hidden;}
+   
+.spice{
+    color:#1F2937;
+    font-size:24px;
+    font-weight: bold;
+}
+.root{
+     color:#FF9B4D;
+    font-size:24px;
+    font-weight: bold;
+
+}
+
+.signup{
+    
+  --bs-btn-color: #FF9B4D;
+  --bs-btn-border-color: #FF9B4D;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #FF9B4D;
+  --bs-btn-hover-border-color: #FF9B4D;
+  --bs-btn-focus-shadow-rgb: 13, 110, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #FF9B4D;
+  --bs-btn-active-border-color: #FF9B4D;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #FF9B4D;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #FF9B4D;
+  --bs-gradient: none;
+}
+.login {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #FF9B4D;
+  --bs-btn-border-color: #FF9B4D;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #FF9B4D;
+  --bs-btn-hover-border-color: #FF9B4D;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #FF9B4D;
+  --bs-btn-active-border-color: #FF9B4D;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #FF9B4D;
+  --bs-btn-disabled-border-color: #FF9B4D;
+}
+
+</style>
+  <style>
+    .title{
+  font-size:36px;
+      color:#1F2937;
+      font-weight:bold;
+      line-height:auto;
+}
+.form-select {
+    --bs-form-select-bg-img: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e);
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+     background-color: #FBF9F6;
+    background-image: var(--bs-form-select-bg-img), var(--bs-form-select-bg-icon, none);
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+   border: var(--bs-border-width) solid #E8DAC5;
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--bs-body-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #FBF9F6;
+    background-clip: padding-box;
+    border: var(--bs-border-width) solid #E8DAC5;
+    border-radius: var(--bs-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;}
+
+.submit {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #FF9B4D;
+  --bs-btn-border-color: #FF9B4D;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #FF9B4D;
+  --bs-btn-hover-border-color: #FF9B4D;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #FF9B4D;
+  --bs-btn-active-border-color: #FF9B4D;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #FF9B4D;
+  --bs-btn-disabled-border-color: #FF9B4D;
+}
+.choose{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #FF9B4D;
+  background-color: white;
+  color: #FF9B4D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* font-size: 30px; Adjust for icon size */}
+  .choose1{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  /* border: 2px solid #FF9B4D; */
+  background-color: #FFEDB3;
+  color: #FF9B4D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* font-size: 30px; Adjust for icon size */}
+  .country{
+      font-size:20px;
+      color:#1F2937;
+      font-weight:bold;
+      line-height:auto;
+    }
+.dal{
+  font-size:14px;
+  color:#4B5563;
+
+  line-height:auto;
+}
+.subtitle{
+ font-size:16px;
+      color:#4B5563;
+     
+      line-height:auto; 
+}
+.time{
+    font-size:14px;
+    color:#FF9B4D;
+}
+#chatMessages {
+  font-size: 14px;
+  line-height: 1.4;
+}
+#chatInput {
+  border-radius: 0;
+}
+.Need{
+    font-size:20px;
+    color:#3E2723;
+    font-weight: bold;
+
+}
+.spices{
+    font-size:16px;
+    color:#8D6E63;
+}
+/* <shgasgh */
+.liquidGlass-effect {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    backdrop-filter: blur(3px);
+    filter: url(#glass-distortion);
+    overflow: hidden;
+    isolation: isolate;
+    border-radius: 20px;
+}
+.liquidGlass-tint {
+    z-index: 1;
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.09);
+}
+.liquidGlass-shine {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    /* box-shadow: inset 2px 2px 1px 0 rgba(255, 255, 255, 0.5), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.5); */
+}
+.liquidGlass-text {
+    z-index: 3;
+    width: 100%;
+}
+  </style>
+<style>
+  /* Glass effect for modal */
+/* Ultra-clear iOS 16 style glass modal */
+.glass-modal {
+  background: rgba(255, 255, 255, 0.08); /* very clear */
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  color: white;
+}
+
+/* Header with extra clarity */
+.glass-modal .modal-header {
+  background: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(25px);
+}
+
+/* Messages area with clear glass look */
+#chatMessages {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+}
+
+/* Chat input bar */
+#chatForm {
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px);
+}
+
+/* Input field */
+#chatInput.form-control {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+}
+#chatInput.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Send button */
+#chatForm .btn-primary {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  backdrop-filter: blur(12px);
+  transition: background 0.3s ease;
+}
+#chatForm .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+</style>
+<style>
+  .card-img {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+    object-fit: cover;
+  }
+
+  .card-img-overlay {
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .trusted {
+    font-weight: bold;
+    font-size: clamp(1.8rem, 4vw, 60px);
+    line-height: 1.3;
+    color: #5C2626;
+  }
+
+  .helping {
+    font-size: clamp(1.8rem, 4vw, 60px);
+    line-height: 1.5;
+    color: #C45E41;
+  }
+
+  .helps {
+    font-size: clamp(1rem, 2.5vw, 24px);
+    line-height: 1.5;
+    color: #C45E41;
+  }
+   .helpsi {
+    font-size: clamp(1rem, 2.5vw, 16px);
+    line-height: 1.5;
+    color: #FFF9F2;
+  }
+
+  /* Buttons: stack on small screens */
+  @media (max-width: 576px) {
+    .d-md-flex {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .d-md-flex .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+
+<style>
+  /* Remove arrows in Chrome, Edge, Safari, Opera */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+
+
+</style>
+</style>
+<div class="card mt-5 border-0 position-relative overflow-hidden">
+ <img src="{% static 'app/image/ABOUTUS.png' %}" alt="My image" class="img-fluid card-img">
+  <div class="card-img-overlay d-flex justify-content-center align-items-center">
+    <div class="container text-center text-white">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 aos-init aos-animate" data-aos="fade-right" data-aos-delay="500">
+          <h1 class="trusted text-white text-start">
+           Lets Spice Things Up !
+          </h1>
+
+          <p class="helps text-white text-start">
+            Have a question about our spices? Want to share your 
+            favorite recipe? Or just want to say hello? We're all ears and ready to help!
+          </p>
+
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<section class="contact">
+  <div class="container py-5">
+    <div class="row justify-content-center mb-5 g-5">
+      <div class="col-lg-10 col-md-10 col-sm-12">
+        <div class="card border-1 px-5 py-5 rounded-4 shadow">
+          <p class="title">Send A Message</p>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="mb-3 col-lg-6">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+              </div>
+              <div class="mb-3 col-lg-6">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              {{ form.email.label_tag }}
+              {{ form.email }}
+            </div>
+
+            <div class="mb-3">
+              {{ form.help_type.label_tag }}
+              {{ form.help_type }}
+            </div>
+
+            <div class="mb-3">
+              {{ form.message.label_tag }}
+              {{ form.message }}
+            </div>
+
+            <div class="form-check mb-3">
+              {{ form.agree_terms }}
+              {{ form.agree_terms.label_tag }}
+            </div>
+
+            <button type="submit" class="btn submit w-100">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+    <section class="last" style="background-color: #FFF1E6;">
+    <div class="container py-5" >
+        <h1 class="title text-center">Get in Touch
+</h1>
+
+            <p class="subtitle text-center">Prefer to reach out directly? Use any of these contact methods</p>
+<div class="row mt-5 mb-5 g-3 justify-content-center">
+<div class="col-lg-4 col-md-6  col-12">
+                <div class="card  text-center border border-1 rounded-3" > 
+                  <div class="card-body text-center">
+              <div class="choose mx-auto mb-1">
+                <i class="fa-solid fa-seedling fa-xl" style="color:#FF9B4D;"></i></div>
+                <h1 class="country">
+                          Track Your Order
+                        </h1>
+                        <p class=" dal">Partnered with small-scale farmers <br>who use sustainable practices.</p>
+                        <a href="#" role="button" style="text-decoration: none;color:#FF9B4D">Track Now</a>
+              </div>
+    
+    </div>
+    </div>
+    <div class="col-lg-4 col-md-6  col-12">
+                <div class="card  text-center border border-1 rounded-3" > 
+                  <div class="card-body text-center">
+              <div class="choose mx-auto mb-1">
+                <i class="fa-solid fa-seedling fa-xl" style="color:#FF9B4D;"></i></div>
+                <h1 class="country">
+                          Track Your Order
+                        </h1>
+                        <p class=" dal">Partnered with small-scale farmers <br>who use sustainable practices.</p>
+                        <a href="#" role="button" style="text-decoration: none;color:#FF9B4D">Track Now</a>
+              </div>
+    
+    </div>
+    </div>
+    <div class="col-lg-4 col-md-6  col-12">
+                <div class="card  text-center border border-1 rounded-3" > 
+                  <div class="card-body text-center">
+              <div class="choose mx-auto mb-1">
+                <i class="fa-solid fa-seedling fa-xl" style="color:#FF9B4D;"></i></div>
+                <h1 class="country">
+                          Track Your Order
+                        </h1>
+                        <p class=" dal">Partnered with small-scale farmers <br>who use sustainable practices.</p>
+                        <a href="#" role="button" style="text-decoration: none;color:#FF9B4D">Track Now</a>
+              </div>
+    
+    </div>
+    </div>
+  <div class="col-lg-12  mt-5 col-12">
+  <div class="card border border-1 rounded-3 px-5 py-5">
+    <div class="card-body">
+      <div class="row align-items-center">
+        
+        <!-- Icon -->
+        <div class="col-lg-4 d-flex justify-content-center align-items-center mb-3 mb-lg-0">
+          <div class="choose1 text-center">
+            <i class="fa-solid fa-seedling fa-2xl" style="color:#FF9B4D;"></i>
+          </div>
+        </div>
+        
+        <!-- Text & Button -->
+        <div class="col-lg-4">
+          
+          <!-- Title & Description -->
+          <h1 class="Need mb-2">Need Immediate Assistance?</h1>
+          <p class="spice mb-3">
+            Our spice experts are available for live chat <br> during business hours.
+          </p>
+
+          <!-- Time & Chat Button in Same Row -->
+          <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+            <div>
+              <span class="time d-block">Monday–Friday: 9am–6pm EST</span>
+              <span class="time d-block">Saturday: 10am–4pm EST</span>
+            </div>
+            <button type="submit" class="btn submit ms-lg-3 mt-3 mt-lg-0" data-bs-toggle="modal" data-bs-target="#chatModal">Start Chat</button>
+          </div>
+
+        </div>
+        <div class="col-lg-4">
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chat Modal -->
+<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content glass-modal liquidGlass-effect" style="height: 500px;">
+      
+      <!-- Tint Layer -->
+      <div class="liquidGlass-tint"></div>
+      
+      <!-- Shine Layer -->
+      <div class="liquidGlass-shine"></div>
+      
+      <!-- Content Layer -->
+      <div class="liquidGlass-text">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="chatModalLabel">Chat with Us</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Chat Body -->
+        <div class="modal-body d-flex flex-column p-0">
+          <div id="chatMessages" class="flex-grow-1 p-3 overflow-auto">
+            <div class="text-start mb-2"><strong>Bot:</strong> Hi! How can I help you today?</div>
+          </div>
+
+          <!-- Chat Input -->
+          <form id="chatForm" class="d-flex border-top bottom-0">
+            <input type="text" id="chatInput" class="form-control border-0" placeholder="Type your message..." required>
+            <button class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</div>
+
+
+            </section>
+{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const chatBox = document.getElementById("chatMessages");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
+
+const escapeHTML = str =>
+  str.replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]));
+
+// Chat responses
+const botReplies = {
+  "hi": "Hello there! 👋",
+  "hello": "Hi! How’s your day going?",
+  "how are you": "I'm doing great, thanks for asking! 😊",
+  "bye": "Goodbye! Have a wonderful day! 👋",
+  "fuck You": "fuck You too 👋",
+};
+
+function addMessage(text, sender) {
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("message", sender === "user" ? "user-message" : "bot-message");
+  msgDiv.innerHTML = escapeHTML(text) +
+    `<span class="timestamp">${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</span>`;
+  chatBox.appendChild(msgDiv);
+  chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
+}
+
+function showTypingIndicator() {
+  const typingDiv = document.createElement("div");
+  typingDiv.id = "typingIndicator";
+  typingDiv.classList.add("bot-message", "message");
+  typingDiv.innerHTML = `<em>Bot is typing...</em>`;
+  chatBox.appendChild(typingDiv);
+  chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: "smooth" });
+}
+
+function removeTypingIndicator() {
+  const typingDiv = document.getElementById("typingIndicator");
+  if (typingDiv) typingDiv.remove();
+}
+
+function botReply(userMessage) {
+  showTypingIndicator();
+
+  setTimeout(() => {
+    removeTypingIndicator();
+
+    const lowerMsg = userMessage.toLowerCase();
+    const reply = botReplies[lowerMsg] || "Sorry, I didn’t understand that. 🤔";
+
+    addMessage(reply, "bot");
+  }, 600);
+}
+
+chatForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  addMessage(message, "user");
+  chatInput.value = "";
+  botReply(message);
+});
+
+</script>>
+</body>
+</html>

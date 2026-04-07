@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Check-in | Secure Access</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+            color: #333;
+        }
+        
+        .security-header {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .security-header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .visitor-badge {
+            background: var(--accent-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+        }
+        
+        .section-title i {
+            background: var(--secondary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e1e5ee;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.2);
+        }
+        
+        .photo-upload-area {
+            border: 3px dashed #c3cfe2;
+            border-radius: 12px;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+        
+        .photo-upload-area:hover {
+            border-color: var(--secondary-color);
+            background: #f0f7ff;
+        }
+        
+        .photo-upload-area i {
+            font-size: 3rem;
+            color: #7b8bb2;
+            margin-bottom: 1rem;
+        }
+        
+        .photo-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 3px solid var(--secondary-color);
+            display: none;
+        }
+        
+        .id-type-buttons .btn-check:checked + .btn {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .btn-custom {
+            padding: 0.875rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 7px 15px rgba(44, 62, 80, 0.2);
+        }
+        
+        .btn-secondary-custom {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid #e1e5ee;
+        }
+        
+        .btn-secondary-custom:hover {
+            background: var(--light-bg);
+            border-color: #c3cfe2;
+        }
+        
+        .status-alert {
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            display: none;
+        }
+        
+        .visitor-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .footer-note {
+            font-size: 0.85rem;
+            color: #7b8bb2;
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-top: 1px solid #e1e5ee;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+        
+        /* Custom radio buttons */
+        .form-check-input:checked {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+        
+        /* QR Code Scanner Area */
+        .qr-scanner-area {
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        
+        /* Signature Pad */
+        .signature-pad {
+            height: 150px;
+            border: 2px solid #e1e5ee;
+            border-radius: 8px;
+            background: white;
+            cursor: crosshair;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #121212;
+                color: #f0f0f0;
+            }
+            
+            .form-section {
+                background: #1e1e1e;
+                color: #f0f0f0;
+            }
+            
+            .form-control, .form-select {
+                background-color: #2d2d2d;
+                border-color: #444;
+                color: #f0f0f0;
+            }
+            
+            .form-control:focus, .form-select:focus {
+                background-color: #2d2d2d;
+                color: #f0f0f0;
+            }
+            
+            .photo-upload-area {
+                background: #2d2d2d;
+                border-color: #444;
+            }
+            
+            .btn-secondary-custom {
+                background: #2d2d2d;
+                color: #f0f0f0;
+                border-color: #444;
+            }
+        }
+        
+        /* Print styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .visitor-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+                <!-- Main Visitor Card -->
+                <div class="visitor-card mb-4">
+                    <!-- Header -->
+                    <div class="security-header">
+                        <div class="header-content">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center mb-2 mb-md-0">
+                                    <div class="bg-white rounded-circle p-2 me-3">
+                                        <i class="fas fa-shield-alt text-primary fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <h1 class="h3 mb-1 fw-bold">Secure Visitor Check-in</h1>
+                                        <p class="mb-0 opacity-75">For authorized security personnel only</p>
+                                    </div>
+                                </div>
+                                <div class="visitor-badge">
+                                    <i class="fas fa-user-clock me-2"></i>
+                                    <span id="visitorId">Visitor #2023-001</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-clock me-2"></i>
+                                        <span id="currentDateTime" class="fw-medium"></span>
+                                    </div>
+                                    <div class="mt-2 mt-md-0">
+                                        <span class="badge bg-light text-dark me-2">
+                                            <i class="fas fa-user-shield me-1"></i> Guard: John D.
+                                        </span>
+                                        <span class="badge bg-light text-dark">
+                                            <i class="fas fa-map-marker-alt me-1"></i> Gate A
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visitor Form -->
+                    <div class="p-3 p-md-4">
+                        <form id="visitorForm">
+                            <!-- Quick Actions -->
+                            <div class="row mb-4 no-print">
+                                <div class="col-12">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" id="qrScanBtn">
+                                            <i class="fas fa-qrcode me-1"></i> Scan QR Code
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" id="preRegisterBtn">
+                                            <i class="fas fa-user-check me-1"></i> Pre-registered
+                                        </button>
+                                        <button type="button" class="btn btn-outline-warning btn-sm" id="contractorBtn">
+                                            <i class="fas fa-hard-hat me-1"></i> Contractor
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" id="emergencyBtn">
+                                            <i class="fas fa-ambulance me-1"></i> Emergency
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Visitor Information -->
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-user"></i> Visitor Information
+                                </h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="fullName" class="form-label required">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" placeholder="Enter visitor's full name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="company" class="form-label required">Company / Organization</label>
+                                        <input type="text" class="form-control" id="company" placeholder="Company name" required>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" class="form-control" id="email" placeholder="visitor@example.com">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label required">Phone Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                            <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 123-4567" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Photo Upload -->
+                                    <div class="col-12">
+                                        <label class="form-label required">Visitor Photo</label>
+                                        <div class="photo-upload-area" id="photoUploadArea">
+                                            <img id="photoPreview" class="photo-preview mb-3" src="" alt="Photo Preview">
+                                            <i class="fas fa-camera mb-3"></i>
+                                            <p class="mb-1 fw-medium">Click to capture or upload visitor photo</p>
+                                            <p class="text-muted small mb-0">Required for security verification</p>
+                                            <input type="file" id="visitorPhoto" accept="image/*" capture="environment" class="d-none">
+                                        </div>
+                                        <div class="d-flex justify-content-center mt-2">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" id="capturePhotoBtn">
+                                                <i class="fas fa-camera me-1"></i> Capture Now
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" id="uploadPhotoBtn">
+                                                <i class="fas fa-upload me-1"></i> Upload Photo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Visit Details -->
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-calendar-check"></i> Visit Details
+                                </h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="hostName" class="form-label required">Host Name</label>
+                                        <select class="form-select" id="hostName" required>
+                                            <option value="" disabled selected>Select host person</option>
+                                            <option value="john.doe">John Doe (Engineering - Floor 3)</option>
+                                            <option value="jane.smith">Jane Smith (HR Department)</option>
+                                            <option value="robert.johnson">Robert Johnson (Management)</option>
+                                            <option value="sarah.williams">Sarah Williams (Operations)</option>
+                                            <option value="michael.brown">Michael Brown (Security Office)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="purpose" class="form-label required">Purpose of Visit</label>
+                                        <select class="form-select" id="purpose" required>
+                                            <option value="" disabled selected>Select purpose</option>
+                                            <option value="business meeting">Business Meeting</option>
+                                            <option value="interview">Job Interview</option>
+                                            <option value="delivery">Delivery / Package</option>
+                                            <option value="maintenance">Maintenance / Repair</option>
+                                            <option value="client visit">Client Visit</option>
+                                            <option value="vendor">Vendor / Supplier</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="checkinTime" class="form-label required">Check-in Time</label>
+                                        <input type="datetime-local" class="form-control" id="checkinTime" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="expectedDuration" class="form-label">Expected Duration</label>
+                                        <select class="form-select" id="expectedDuration">
+                                            <option value="" selected>Select duration</option>
+                                            <option value="30">30 minutes</option>
+                                            <option value="60">1 hour</option>
+                                            <option value="120">2 hours</option>
+                                            <option value="240">4 hours</option>
+                                            <option value="480">Full day</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <label for="meetingLocation" class="form-label">Meeting Location / Room</label>
+                                        <input type="text" class="form-control" id="meetingLocation" placeholder="Conference Room A, Floor 3, etc.">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Identification -->
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-id-card"></i> Identification
+                                </h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <label class="form-label required d-block mb-2">ID Type</label>
+                                        <div class="id-type-buttons d-flex flex-wrap gap-2">
+                                            <input type="radio" class="btn-check" name="idType" id="idDriver" value="driver" required>
+                                            <label class="btn btn-outline-primary" for="idDriver">
+                                                <i class="fas fa-id-card me-1"></i> Driver's License
+                                            </label>
+                                            
+                                            <input type="radio" class="btn-check" name="idType" id="idPassport" value="passport">
+                                            <label class="btn btn-outline-primary" for="idPassport">
+                                                <i class="fas fa-passport me-1"></i> Passport
+                                            </label>
+                                            
+                                            <input type="radio" class="btn-check" name="idType" id="idCompany" value="company">
+                                            <label class="btn btn-outline-primary" for="idCompany">
+                                                <i class="fas fa-building me-1"></i> Company ID
+                                            </label>
+                                            
+                                            <input type="radio" class="btn-check" name="idType" id="idOther" value="other">
+                                            <label class="btn btn-outline-primary" for="idOther">
+                                                <i class="fas fa-address-card me-1"></i> Other
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="idNumber" class="form-label required">ID Number</label>
+                                        <input type="text" class="form-control" id="idNumber" placeholder="Enter ID number" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="vehicleNumber" class="form-label">Vehicle Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-car"></i></span>
+                                            <input type="text" class="form-control" id="vehicleNumber" placeholder="License plate number">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- ID Photo Upload -->
+                                    <div class="col-12">
+                                        <label class="form-label">ID Document Photo (Optional)</label>
+                                        <div class="photo-upload-area p-3" id="idPhotoUpload">
+                                            <i class="fas fa-id-badge mb-2"></i>
+                                            <p class="mb-0 small">Click to capture/upload ID document</p>
+                                            <input type="file" id="idDocumentPhoto" accept="image/*" class="d-none">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information -->
+                            <div class="form-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-clipboard-check"></i> Additional Information
+                                </h3>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="emergencyContact" class="form-label">Emergency Contact</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                                            <input type="text" class="form-control" id="emergencyContact" placeholder="Name and phone number">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label class="form-label">Items Brought In</label>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input" type="checkbox" id="itemLaptop">
+                                            <label class="form-check-label" for="itemLaptop">Laptop</label>
+                                        </div>
+                                        <div class="form-check mb-1">
+                                            <input class="form-check-input" type="checkbox" id="itemCamera">
+                                            <label class="form-check-label" for="itemCamera">Camera</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="itemTools">
+                                            <label class="form-check-label" for="itemTools">Tools / Equipment</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <label for="securityNotes" class="form-label">Security Notes</label>
+                                        <textarea class="form-control" id="securityNotes" rows="3" placeholder="Any special instructions, security concerns, or additional notes..."></textarea>
+                                    </div>
+                                    
+                                    <!-- Signature Pad -->
+                                    <div class="col-12">
+                                        <label class="form-label">Visitor Signature</label>
+                                        <div class="signature-pad border rounded" id="signaturePad">
+                                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                                <i class="fas fa-signature me-2"></i>
+                                                <span>Visitor signature area (click to draw)</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" id="clearSignatureBtn">
+                                                <i class="fas fa-eraser me-1"></i> Clear Signature
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div class="row mt-4 no-print">
+                                <div class="col-md-6 mb-2 mb-md-0">
+                                    <button type="button" class="btn btn-secondary-custom btn-custom w-100" id="clearFormBtn">
+                                        <i class="fas fa-redo me-2"></i> Clear Form
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-primary-custom btn-custom w-100" id="submitBtn">
+                                        <i class="fas fa-check-circle me-2"></i> Check-in Visitor
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Status Alert -->
+                            <div class="alert status-alert mt-4" id="statusAlert" role="alert">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <span id="statusText"></span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="footer-note">
+                        <p class="mb-1">
+                            <i class="fas fa-shield-alt me-1"></i> 
+                            <strong>Secure Access Visitor Management System</strong> 
+                            | All data is encrypted and protected
+                        </p>
+                        <p class="small mb-0">
+                            © 2023 SecureAccess Pro | 
+                            <a href="#" class="text-decoration-none">Privacy Policy</a> | 
+                            <a href="#" class="text-decoration-none">Guard Manual</a> | 
+                            <a href="#" class="text-decoration-none">Emergency Protocols</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Signature Pad Library (optional) -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize
+            updateDateTime();
+            generateVisitorId();
+            
+            // Update date and time every minute
+            setInterval(updateDateTime, 60000);
+            
+            // Set default check-in time to current
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60000;
+            const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+            document.getElementById('checkinTime').value = localISOTime;
+            
+            // Photo upload handling
+            const photoUploadArea = document.getElementById('photoUploadArea');
+            const photoInput = document.getElementById('visitorPhoto');
+            const photoPreview = document.getElementById('photoPreview');
+            const capturePhotoBtn = document.getElementById('capturePhotoBtn');
+            const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+            
+            photoUploadArea.addEventListener('click', function() {
+                photoInput.click();
+            });
+            
+            capturePhotoBtn.addEventListener('click', function() {
+                photoInput.setAttribute('capture', 'environment');
+                photoInput.click();
+            });
+            
+            uploadPhotoBtn.addEventListener('click', function() {
+                photoInput.removeAttribute('capture');
+                photoInput.click();
+            });
+            
+            photoInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        photoPreview.src = e.target.result;
+                        photoPreview.style.display = 'block';
+                        photoUploadArea.querySelector('i').style.display = 'none';
+                        photoUploadArea.querySelector('p').innerHTML = 'Photo uploaded successfully';
+                    }
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            // ID photo upload
+            const idPhotoUpload = document.getElementById('idPhotoUpload');
+            const idPhotoInput = document.getElementById('idDocumentPhoto');
+            
+            idPhotoUpload.addEventListener('click', function() {
+                idPhotoInput.click();
+            });
+            
+            // Signature Pad (simplified)
+            const signaturePad = document.getElementById('signaturePad');
+            let isDrawing = false;
+            
+            signaturePad.addEventListener('mousedown', function(e) {
+                isDrawing = true;
+                drawSignature(e);
+            });
+            
+            signaturePad.addEventListener('mousemove', function(e) {
+                if (isDrawing) {
+                    drawSignature(e);
+                }
+            });
+            
+            signaturePad.addEventListener('mouseup', function() {
+                isDrawing = false;
+            });
+            
+            signaturePad.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                isDrawing = true;
+                drawSignature(e.touches[0]);
+            });
+            
+            signaturePad.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (isDrawing) {
+                    drawSignature(e.touches[0]);
+                }
+            });
+            
+            signaturePad.addEventListener('touchend', function() {
+                isDrawing = false;
+            });
+            
+            function drawSignature(e) {
+                const rect = signaturePad.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const dot = document.createElement('div');
+                dot.style.position = 'absolute';
+                dot.style.left = (x - 2) + 'px';
+                dot.style.top = (y - 2) + 'px';
+                dot.style.width = '4px';
+                dot.style.height = '4px';
+                dot.style.backgroundColor = '#333';
+                dot.style.borderRadius = '50%';
+                signaturePad.appendChild(dot);
+                
+                // Remove instructional text
+                const instruction = signaturePad.querySelector('div');
+                if (instruction) {
+                    instruction.style.display = 'none';
+                }
+            }
+            
+            // Clear signature button
+            document.getElementById('clearSignatureBtn').addEventListener('click', function() {
+                signaturePad.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <i class="fas fa-signature me-2"></i>
+                        <span>Visitor signature area (click to draw)</span>
+                    </div>
+                `;
+            });
+            
+            // Quick action buttons
+            document.getElementById('qrScanBtn').addEventListener('click', function() {
+                alert('QR Scanner would open here in a real app. Simulating pre-filled data...');
+                populateSampleData('pre-registered');
+            });
+            
+            document.getElementById('preRegisterBtn').addEventListener('click', function() {
+                populateSampleData('pre-registered');
+            });
+            
+            document.getElementById('contractorBtn').addEventListener('click', function() {
+                populateSampleData('contractor');
+            });
+            
+            document.getElementById('emergencyBtn').addEventListener('click', function() {
+                populateSampleData('emergency');
+                showStatus('Emergency mode activated - Host notified immediately!', 'warning');
+            });
+            
+            // Form submission
+            const form = document.getElementById('visitorForm');
+            const statusAlert = document.getElementById('statusAlert');
+            const statusText = document.getElementById('statusText');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validation
+                if (!validateForm()) {
+                    return;
+                }
+                
+                // Simulate submission
+                const submitBtn = document.getElementById('submitBtn');
+                const originalText = submitBtn.innerHTML;
+                
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
+                submitBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(function() {
+                    // Generate badge number
+                    const badgeNumber = Math.floor(Math.random() * 9000) + 1000;
+                    
+                    showStatus(`Visitor checked in successfully! Badge #${badgeNumber} assigned. Host has been notified via SMS and email.`, 'success');
+                    
+                    // Print visitor pass (simulated)
+                    setTimeout(function() {
+                        alert(`Visitor pass printed: #${badgeNumber}\nName: ${document.getElementById('fullName').value}\nCompany: ${document.getElementById('company').value}\nHost: ${document.getElementById('hostName').value}`);
+                    }, 500);
+                    
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Reset form after 8 seconds
+                    setTimeout(function() {
+                        resetForm();
+                        showStatus('Form ready for next visitor', 'info');
+                        setTimeout(() => {
+                            statusAlert.style.display = 'none';
+                        }, 3000);
+                    }, 8000);
+                }, 2000);
+            });
+            
+            // Clear form button
+            document.getElementById('clearFormBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear the form? All entered data will be lost.')) {
+                    resetForm();
+                    showStatus('Form cleared successfully', 'info');
+                    setTimeout(() => {
+                        statusAlert.style.display = 'none';
+                    }, 3000);
+                }
+            });
+            
+            // Helper functions
+            function updateDateTime() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                };
+                document.getElementById('currentDateTime').textContent = 
+                    now.toLocaleDateString('en-US', options);
+            }
+            
+            function generateVisitorId() {
+                const date = new Date();
+                const year = date.getFullYear();
+                const day = date.getDay().toString().padStart(2, '0');
+                const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                const visitorId = `VIS-${year}${day}-${randomNum}`;
+                document.getElementById('visitorId').textContent = visitorId;
+            }
+            
+            function validateForm() {
+                const requiredFields = ['fullName', 'company', 'phone', 'hostName', 'purpose', 'checkinTime'];
+                
+                for (const fieldId of requiredFields) {
+                    const field = document.getElementById(fieldId);
+                    if (!field.value.trim()) {
+                        showStatus(`Please fill in the ${field.previousElementSibling.textContent.replace(' *', '')} field`, 'danger');
+                        field.focus();
+                        return false;
+                    }
+                }
+                
+                if (!document.querySelector('input[name="idType"]:checked')) {
+                    showStatus('Please select an ID type', 'danger');
+                    return false;
+                }
+                
+                if (!document.getElementById('idNumber').value.trim()) {
+                    showStatus('Please enter the ID number', 'danger');
+                    document.getElementById('idNumber').focus();
+                    return false;
+                }
+                
+                if (!photoInput.files.length) {
+                    showStatus('Please capture or upload a visitor photo', 'danger');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            function showStatus(message, type) {
+                statusText.textContent = message;
+                statusAlert.className = `alert alert-${type} status-alert mt-4`;
+                statusAlert.style.display = 'block';
+                
+                // Auto-hide success messages after 5 seconds
+                if (type === 'success') {
+                    setTimeout(() => {
+                        statusAlert.style.display = 'none';
+                    }, 5000);
+                }
+            }
+            
+            function resetForm() {
+                form.reset();
+                
+                // Reset photo preview
+                photoPreview.style.display = 'none';
+                photoUploadArea.querySelector('i').style.display = 'block';
+                photoUploadArea.querySelector('p').innerHTML = 'Click to capture or upload visitor photo';
+                
+                // Reset signature
+                signaturePad.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <i class="fas fa-signature me-2"></i>
+                        <span>Visitor signature area (click to draw)</span>
+                    </div>
+                `;
+                
+                // Reset time to current
+                const now = new Date();
+                const timezoneOffset = now.getTimezoneOffset() * 60000;
+                const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+                document.getElementById('checkinTime').value = localISOTime;
+                
+                // Generate new visitor ID
+                generateVisitorId();
+            }
+            
+            function populateSampleData(type) {
+                const sampleData = {
+                    'pre-registered': {
+                        fullName: 'Robert Johnson',
+                        company: 'Global Solutions Inc.',
+                        email: 'r.johnson@globalsolutions.com',
+                        phone: '+1 (555) 234-5678',
+                        hostName: 'jane.smith',
+                        purpose: 'business meeting',
+                        meetingLocation: 'Conference Room B, Floor 2',
+                        idType: 'idDriver',
+                        idNumber: 'DL-789123456',
+                        expectedDuration: '120'
+                    },
+                    'contractor': {
+                        fullName: 'Mike Anderson',
+                        company: 'Tech Maintenance Pro',
+                        email: 'mike.anderson@tmp.com',
+                        phone: '+1 (555) 345-6789',
+                        hostName: 'michael.brown',
+                        purpose: 'maintenance',
+                        meetingLocation: 'Server Room, Basement',
+                        idType: 'idCompany',
+                        idNumber: 'TMP-2023-789',
+                        expectedDuration: '480',
+                        securityNotes: 'Authorized for server room access. Escort required.'
+                    },
+                    'emergency': {
+                        fullName: 'Dr. Sarah Williams',
+                        company: 'City Emergency Services',
+                        email: 's.williams@cityemergency.gov',
+                        phone: '+1 (555) 911-9111',
+                        hostName: 'robert.johnson',
+                        purpose: 'other',
+                        meetingLocation: 'Emergency Assembly Point',
+                        idType: 'idOther',
+                        idNumber: 'EMS-789-2023',
+                        expectedDuration: '30',
+                        securityNotes: 'EMERGENCY RESPONSE - Grant immediate access'
+                    }
+                };
+                
+                const data = sampleData[type];
+                if (!data) return;
+                
+                // Populate form fields
+                for (const [field, value] of Object.entries(data)) {
+                    if (field === 'idType') {
+                        document.getElementById(value).checked = true;
+                    } else {
+                        const element = document.getElementById(field);
+                        if (element) element.value = value;
+                    }
+                }
+                
+                // Update check-in time to now
+                const now = new Date();
+                const timezoneOffset = now.getTimezoneOffset() * 60000;
+                const localISOTime = new Date(now - timezoneOffset).toISOString().slice(0, 16);
+                document.getElementById('checkinTime').value = localISOTime;
+                
+                showStatus(`${type.charAt(0).toUpperCase() + type.slice(1)} visitor data loaded`, 'info');
+                setTimeout(() => {
+                    statusAlert.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

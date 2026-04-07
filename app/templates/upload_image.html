@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Share with Image</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+body { font-family: Arial; padding: 20px; }
+.event-box { position: relative; border: 1px solid #ccc; max-width: 500px; text-align: center; margin-bottom: 20px; }
+.event-img { width: 100%; height: auto; display: block; }
+.event-text { 
+    position: absolute; 
+    bottom: 10px; 
+    left: 0; 
+    width: 100%; 
+    color: white; 
+    font-size: 18px; 
+    background: rgba(0,0,0,0.5); 
+    padding: 5px; 
+    box-sizing: border-box;
+}
+.share-btn { padding: 10px 20px; background: #25D366; color: white; border: none; cursor: pointer; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<h1>Dummy Event</h1>
+
+<div class="event-box" id="eventBox">
+    <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" 
+         class="event-img" id="eventImage">
+    <div class="event-text" id="eventDescription">
+        This is a dummy event description. Join us for a fun-filled experience with exciting activities and surprises!
+    </div>
+</div>
+
+<button class="share-btn" id="shareBtn">Share Event on WhatsApp</button>
+
+<script>
+document.getElementById('shareBtn').addEventListener('click', async () => {
+    const shareBtn = document.getElementById('shareBtn');
+    shareBtn.disabled = true;
+    shareBtn.innerText = 'Preparing...';
+
+    try {
+        const eventBox = document.getElementById('eventBox');
+        const description = document.getElementById('eventDescription').innerText;
+        const pageURL = window.location.href;
+
+        // Capture the event box as a canvas
+        const canvas = await html2canvas(eventBox);
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+        const file = new File([blob], "event.png", {type: "image/png"});
+
+        // Mobile sharing with actual image
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                text: description,
+                url: pageURL
+            });
+        } else {
+            // Desktop fallback: upload to Django
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const response = await fetch("{% url 'upload_image' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {'X-CSRFToken': '{{ csrf_token }}'}
+            });
+
+            const data = await response.json();
+            if (!data.image_url) throw new Error('Image upload failed');
+
+            // WhatsApp share link
+            const text = encodeURIComponent(`${description}\n${data.image_url}\n${pageURL}`);
+            const whatsappURL = `https://wa.me/?text=${text}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+    } catch (err) {
+        alert('Error: ' + err);
+        console.error(err);
+    }
+
+    shareBtn.disabled = false;
+    shareBtn.innerText = 'Share Event on WhatsApp';
+});
+</script>
+
+</body>
+</html>

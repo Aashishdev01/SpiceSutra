@@ -1,0 +1,744 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spice Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="icon" type="image/webp" href="{% static 'app/image/favicon.png' %}">
+     
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'app/image/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'app/image/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'app/image/favicon-16x16.png' %}">
+  <link rel="manifest" href="{%  static 'app/image/site.webmanifest' %}">
+    
+  <!-- Font Awesome for enhanced icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    .spice{
+      color:#1F2937;
+      font-size:24px;
+      font-weight: bold;
+    }
+    .root{
+      color:#FF9B4D;
+      font-size:24px;
+      font-weight: bold;
+    }
+    
+    :root {
+      --bg: #f9fafb;
+      --panel: #ffffff;
+      --primary-blue: #0b66ff;
+      --muted: #6b7280;
+      --transition-speed: 0.3s;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+
+    .app-wrap {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: var(--panel);
+      border-right: 1px solid #e5e7eb;
+      transition: width var(--transition-speed) ease, transform var(--transition-speed) ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+    }
+
+    .sidebar.collapsed {
+      width: 0 !important;
+      overflow: hidden;
+    }
+
+    .brand {
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--primary-blue);
+      color: #fff;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .title {
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-left: .5rem;
+    }
+
+    .collapse-toggle {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.2s ease;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .collapse-toggle:hover {
+      background-color: #f3f4f6;
+      color: var(--primary-blue);
+    }
+
+    .nav {
+      flex: 1;
+      padding: .5rem 0;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      border-radius: 6px;
+      margin: .25rem .5rem;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link:hover {
+      background: #f3f4f6;
+      color: var(--primary-blue);
+      transform: translateX(3px);
+    }
+
+    .nav-link.active {
+      background: #eff6ff;
+      color: var(--primary-blue);
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(11, 102, 255, 0.1);
+    }
+
+    .nav-link.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: var(--primary-blue);
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-link:hover .nav-icon {
+      transform: scale(1.1);
+    }
+
+    .sidebar.collapsed .nav-text,
+    .sidebar.collapsed .title {
+      display: none;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      transition: margin-left var(--transition-speed) ease;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--panel);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .topbar:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--panel);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      border-color: rgba(11, 102, 255, 0.1);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-blue), #FF9B4D);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .stat-card .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary-blue);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover .card-icon {
+      transform: scale(1.1);
+    }
+
+    /* Table */
+    .data-table {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Accordion button custom styles */
+    .accordion-button {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+      color: #0d6efd;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 0.75rem 1rem;
+    }
+
+    .accordion-button:not(.collapsed) {
+      background: transparent !important;
+      color: #0d6efd;
+      box-shadow: none !important;
+    }
+
+    .accordion-button:focus {
+      box-shadow: none !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .accordion-button:hover {
+      background: #f3f4f6 !important;
+      border-radius: 6px;
+    }
+
+    .accordion-body {
+      padding: 0.5rem 0;
+    }
+
+    /* Dropdown enhancements */
+    .dropdown-menu {
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 0.5rem;
+    }
+
+    .dropdown-item {
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: #f3f4f6;
+      color: var(--primary-blue);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      background: var(--panel);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    footer:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Mobile Toggle Button */
+    #mobileToggle {
+      transition: all 0.3s ease;
+    }
+
+    #mobileToggle:hover {
+      transform: scale(1.05);
+    }
+
+    /* -------- Desktop Collapse (≥992px) -------- */
+    @media (min-width: 992px) {
+      .sidebar.collapsed {
+        width: 0 !important;       
+        overflow: hidden !important;
+      }
+      
+      .sidebar.collapsed + .main {
+        margin-left: 0;
+      }
+    }
+
+    /* -------- Mobile (<992px) -------- */
+    @media (max-width: 992px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -260px;              
+        width: 250px;              
+        height: 100%;
+        z-index: 1050;
+        transition: left 0.3s ease;
+      }
+
+      .sidebar.show {
+        left: 0;                 
+      }
+
+      .sidebar.collapsed {
+        width: 250px !important;
+      }
+      
+      .main {
+        width: 100%;
+      }
+    }
+
+    /* Loading animation for cards */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    /* Pulse animation for active elements */
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(11, 102, 255, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(11, 102, 255, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(11, 102, 255, 0);
+      }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* Toast notifications */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1060;
+    }
+
+    .toast {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="app-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="d-flex mx-auto align-items-center">
+          <a>
+            <h1 class="mb-0 "><span class="spice me-2">Spice</span><span class="root">Root</span></h1>
+          </a>
+        </div>
+        <button class="collapse-toggle" id="collapseBtn">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+
+      <nav class="nav flex-column">
+        <a href="{% url 'base' %}" class="nav-link active">
+          <span class="nav-icon"><i class="fas fa-home"></i></span><span class="nav-text">Overview</span>
+        </a>
+
+        <!-- Accordions Wrapper -->
+        <div class="accordion" id="sidebarAccordion">
+
+          <!-- Accordion 1 -->
+          <div class="accordion-item border-0">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseOne">
+                <span class="nav-icon"><i class="fas fa-folder"></i></span><span class="ms-2">Index</span>
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordion">
+              <div class="accordion-body py-1">
+                <a href="{% url 'receipe' %}" class="nav-link px-3"><i class="fas fa-utensils me-2"></i>Receipe</a>
+                <a href="{% url 'shop_by_flavour' %}" class="nav-link px-3"><i class="fas fa-shopping-bag me-2"></i>Shop By Flavour</a>
+                <a href="{% url 'add_spice_collection' %}" class="nav-link px-3"><i class="fas fa-layer-group me-2"></i>Build Your Spice Shelf</a>
+                <a href="{% url 'paring' %}" class="nav-link px-3"><i class="fas fa-perfect me-2"></i>Perfect</a>
+                <a href="{% url 'featured_products' %}" class="nav-link px-3"><i class="fas fa-star me-2"></i>Featured Products</a>
+                <a href="{% url 'add_spice' %}" class="nav-link px-3"><i class="fas fa-pepper-hot me-2"></i>Spices</a>
+                <a href="{% url 'add_testimonial' %}" class="nav-link px-3"><i class="fas fa-comment me-2"></i>Testimonials</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accordion 2 -->
+          <div class="accordion-item border-0">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo">
+                <span class="nav-icon"><i class="fas fa-cog"></i></span><span class="ms-2">About</span>
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordion">
+              <div class="accordion-body py-1">
+                <a href="#" class="nav-link px-3"><i class="fas fa-user me-2"></i>Profile</a>
+                <a href="#" class="nav-link px-3"><i class="fas fa-sliders-h me-2"></i>Preferences</a>
+                <a href="#" class="nav-link px-3"><i class="fas fa-shield-alt me-2"></i>Security</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="accordion-item border-0">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo2">
+                <span class="nav-icon"><i class="fas fa-th-list"></i></span><span class="ms-2">Index2</span>
+              </button>
+            </h2>
+            <div id="collapseTwo2" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordion">
+              <div class="accordion-body py-1">
+                <a href="{% url 'receipe' %}" class="nav-link px-3"><i class="fas fa-utensils me-2"></i>Receipe</a>
+                <a href="{% url 'shop_by_flavour' %}" class="nav-link px-3"><i class="fas fa-shopping-bag me-2"></i>Shop By Flavour</a>
+                <a href="{% url 'add_spice_collection' %}" class="nav-link px-3"><i class="fas fa-layer-group me-2"></i>Build Your Spice Shelf</a>
+                <a href="{% url 'paring' %}" class="nav-link px-3"><i class="fas fa-perfect me-2"></i>Perfect</a>
+                <a href="{% url 'featured_products' %}" class="nav-link px-3"><i class="fas fa-star me-2"></i>Featured Products</a>
+                <a href="{% url 'add_spice' %}" class="nav-link px-3"><i class="fas fa-pepper-hot me-2"></i>Spices</a>
+                <a href="{% url 'add_testimonial' %}" class="nav-link px-3"><i class="fas fa-comment me-2"></i>Testimonials</a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Accordion 3 -->
+          <div class="accordion-item border-0">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseThree">
+                <span class="nav-icon"><i class="fas fa-chart-bar"></i></span><span class="ms-2">Contact Us</span>
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#sidebarAccordion">
+              <div class="accordion-body py-1">
+                <a href="{% url 'dashboard' %}" class="nav-link px-3"><i class="fas fa-address-book me-2"></i>Contact Us</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <a href="#" class="nav-link">
+          <span class="nav-icon"><i class="fas fa-bell"></i></span><span class="nav-text">Notifications</span>
+          <span class="badge bg-danger rounded-pill ms-auto pulse">3</span>
+        </a>
+      </nav>
+      
+      <div class="p-3 small text-muted border-top">v1.0 • Admin CRM</div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-primary" id="mobileToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div>
+            <h4 class="mb-0 text-primary">Dashboard</h4>
+            <small class="text-muted">Welcome back — here's a quick overview</small>
+          </div>
+        </div>
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fas fa-user-circle me-2"></i>User
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Interactive Cards Section -->
+      <div class="container-fluid">
+        <div class="cards-grid">
+          <div class="stat-card fade-in-up" style="animation-delay: 0.1s;">
+            <div class="card-icon">
+              <i class="fas fa-pepper-hot"></i>
+            </div>
+            <h5 class="card-title">Total Spices</h5>
+            <h3 class="card-value">142</h3>
+            <p class="card-change text-success">
+              <i class="fas fa-arrow-up me-1"></i> 12% from last month
+            </p>
+          </div>
+          
+          <div class="stat-card fade-in-up" style="animation-delay: 0.2s;">
+            <div class="card-icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <h5 class="card-title">Recipes</h5>
+            <h3 class="card-value">87</h3>
+            <p class="card-change text-success">
+              <i class="fas fa-arrow-up me-1"></i> 5% from last month
+            </p>
+          </div>
+          
+          <div class="stat-card fade-in-up" style="animation-delay: 0.3s;">
+            <div class="card-icon">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h5 class="card-title">Orders</h5>
+            <h3 class="card-value">324</h3>
+            <p class="card-change text-danger">
+              <i class="fas fa-arrow-down me-1"></i> 3% from last month
+            </p>
+          </div>
+          
+          <div class="stat-card fade-in-up" style="animation-delay: 0.4s;">
+            <div class="card-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h5 class="card-title">Customers</h5>
+            <h3 class="card-value">1,248</h3>
+            <p class="card-change text-success">
+              <i class="fas fa-arrow-up me-1"></i> 8% from last month
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {% block content %}    
+      <!-- Default content if no block content provided -->
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-white py-3">
+                <h5 class="mb-0"><i class="fas fa-table me-2"></i>Recent Activity</h5>
+              </div>
+              <div class="card-body">
+                <p class="text-muted">No recent activity to display. Content from child templates will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
+      
+      <footer class="text-center text-muted small">Made with <i class="fas fa-heart text-danger"></i> — customise me</footer>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const collapseBtn = document.getElementById('collapseBtn');
+    const mobileToggle = document.getElementById('mobileToggle');
+
+    function toggleSidebar() {
+      // On desktop: toggle collapsed
+      if (window.innerWidth >= 992) {
+        sidebar.classList.toggle('collapsed');
+        collapseBtn.innerHTML = sidebar.classList.contains('collapsed') ? 
+          '<i class="fas fa-chevron-right"></i>' : '<i class="fas fa-chevron-left"></i>';
+      }
+      // On mobile: toggle slide-in/out
+      else {
+        sidebar.classList.toggle('show');
+      }
+    }
+
+    // Attach same function to both buttons
+    collapseBtn.addEventListener('click', toggleSidebar);
+    mobileToggle.addEventListener('click', toggleSidebar);
+
+    // Initialize
+    function updateCollapse() {
+      collapseBtn.innerHTML = sidebar.classList.contains('collapsed') ? 
+        '<i class="fas fa-chevron-right"></i>' : '<i class="fas fa-chevron-left"></i>';
+    }
+    updateCollapse();
+
+    // Add interactive effects to cards
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add click effects to cards
+      const cards = document.querySelectorAll('.stat-card');
+      cards.forEach(card => {
+        card.addEventListener('click', function() {
+          this.classList.add('pulse');
+          setTimeout(() => {
+            this.classList.remove('pulse');
+          }, 2000);
+          
+          // Show toast notification
+          showToast('Card clicked: ' + this.querySelector('.card-title').textContent);
+        });
+      });
+      
+      // Add ripple effect to nav links
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          // Remove active class from all links
+          navLinks.forEach(l => l.classList.remove('active'));
+          // Add active class to clicked link
+          this.classList.add('active');
+        });
+      });
+    });
+
+    // Toast notification function
+    function showToast(message, type = 'info') {
+      const toastContainer = document.querySelector('.toast-container');
+      const toastId = 'toast-' + Date.now();
+      
+      const toast = document.createElement('div');
+      toast.className = `toast align-items-center text-bg-${type} border-0`;
+      toast.id = toastId;
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('aria-live', 'assertive');
+      toast.setAttribute('aria-atomic', 'true');
+      
+      toast.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+      
+      toastContainer.appendChild(toast);
+      
+      const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
+      bsToast.show();
+      
+      // Remove toast from DOM after it's hidden
+      toast.addEventListener('hidden.bs.toast', function() {
+        toast.remove();
+      });
+    }
+
+    // Show welcome toast on page load
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        showToast('Welcome to SpiceRoot Dashboard!', 'success');
+      }, 1000);
+    });
+  </script>
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+  <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#table').DataTable({
+        "paging": true,
+        "searching": true,
+        "info": true,
+        "lengthChange": true,
+        "pageLength": 10,
+        "lengthMenu": [ [10, 20, 50, -1], [10, 20, 50, "All"] ],
+        "dom": '<"top"lf>rt<"bottom"ip><"clear">'
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

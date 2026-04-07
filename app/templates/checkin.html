@@ -1,0 +1,689 @@
+{% extends "offline_base.html" %}
+{% block title %}Security Dashboard{% endblock %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="container-fluid py-4">
+    <!-- Dashboard Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1 fw-bold">
+                <i class="fas fa-tachometer-alt me-2"></i>Security Dashboard
+            </h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-user-shield me-1"></i>
+                Welcome, {{ guard.user.get_full_name|default:"Security Officer" }}
+                {% if guard.gate %} | Gate: {{ guard.gate }}{% endif %}
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" onclick="location.href='#'">
+                <i class="fas fa-user-plus me-1"></i> New Check-in
+            </button>
+            <button class="btn btn-success" onclick="location.href='#'">
+                <i class="fas fa-user-minus me-1"></i> Check-out
+            </button>
+            <button class="btn btn-outline-secondary" onclick="window.print()">
+                <i class="fas fa-print me-1"></i> Print
+            </button>
+        </div>
+    </div>
+
+    <!-- Quick Stats Cards -->
+    <div class="row mb-4">
+        <!-- Today's Total Visitors -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">
+                                Today's Visitors
+                            </div>
+                            <div class="h5 mb-0 fw-bold">{{ today_total }}</div>
+                            <div class="mt-2">
+                                <span class="badge bg-success">In: {{ today_checked_in }}</span>
+                                <span class="badge bg-secondary">Out: {{ today_checked_out }}</span>
+                                <span class="badge bg-danger">Overdue: {{ today_overdue }}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Visitors -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">
+                                This Week
+                            </div>
+                            <div class="h5 mb-0 fw-bold">{{ week_total }}</div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-user-clock me-1"></i>
+                                    {{ week_checked_in }} currently in facility
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-week fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Visitors -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-info text-uppercase mb-1">
+                                This Month
+                            </div>
+                            <div class="h5 mb-0 fw-bold">{{ month_total }}</div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-chart-line me-1"></i>
+                                    {{ month_checked_in }} currently checked in
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guard Performance -->
+        {% if guard_stats %}
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">
+                                Your Performance
+                            </div>
+                            <div class="h5 mb-0 fw-bold">{{ guard_stats.today_checkins }}</div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-user-check me-1"></i>
+                                    {{ guard_stats.today_checkins }} check-ins today
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-shield fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Weekly Trend Chart -->
+        <div class="col-xl-8 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 fw-bold text-primary">
+                        <i class="fas fa-chart-line me-2"></i>Weekly Visitor Trend
+                    </h6>
+                    <div class="dropdown no-arrow">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" 
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                             aria-labelledby="dropdownMenuLink">
+                            <div class="dropdown-header">Chart Options:</div>
+                            <a class="dropdown-item" href="#" onclick="updateChart('week')">Last 7 Days</a>
+                            <a class="dropdown-item" href="#" onclick="updateChart('month')">Last 30 Days</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" onclick="exportChart()">Export Data</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="weeklyTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visitor Type Distribution -->
+        <div class="col-xl-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 fw-bold text-primary">
+                        <i class="fas fa-chart-pie me-2"></i>Today's Visitor Types
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4">
+                        <canvas id="visitorTypeChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        <span class="me-3">
+                            <i class="fas fa-circle text-primary"></i> Guests
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-circle text-success"></i> Contractors
+                        </span>
+                        <span class="me-3">
+                            <i class="fas fa-circle text-info"></i> Delivery
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Row: Hourly and Department Charts -->
+    <div class="row mb-4">
+        <!-- Hourly Distribution -->
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 fw-bold text-primary">
+                        <i class="fas fa-clock me-2"></i>Today's Hourly Distribution
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Peak hour: <span id="peakHour">Loading...</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Distribution -->
+        <div class="col-xl-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 fw-bold text-primary">
+                        <i class="fas fa-building me-2"></i>Department Visits (Today)
+                    </h6>
+                    <button class="btn btn-sm btn-outline-primary" onclick="refreshDepartmentChart()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="chart-bar">
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Tables Row -->
+    <div class="row">
+        <!-- Recent Visitors -->
+        <div class="col-xl-8 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 fw-bold text-primary">
+                        <i class="fas fa-history me-2"></i>Recent Visitors (Last 2 Hours)
+                    </h6>
+                    <a href="#" class="btn btn-sm btn-primary">
+                        View All <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Visitor</th>
+                                    <th>Company</th>
+                                    <th>Host</th>
+                                    <th>Badge</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for visitor in recent_visitors %}
+                                <tr>
+                                    <td>{{ visitor.check_in_time|time:"H:i" }}</td>
+                                    <td>
+                                        <strong>{{ visitor.get_full_name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ visitor.phone }}</small>
+                                    </td>
+                                    <td>{{ visitor.company|truncatechars:20 }}</td>
+                                    <td>
+                                        {{ visitor.host.name }}
+                                        <br>
+                                        <small class="text-muted">{{ visitor.host.department }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ visitor.badge_number }}</span>
+                                    </td>
+                                    <td>
+                                        {% if visitor.status == 'checked_in' %}
+                                        <span class="badge bg-success">Checked In</span>
+                                        {% elif visitor.status == 'checked_out' %}
+                                        <span class="badge bg-secondary">Checked Out</span>
+                                        {% else %}
+                                        <span class="badge bg-warning">{{ visitor.status|title }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        <i class="fas fa-users-slash fa-2x mb-3"></i>
+                                        <p>No recent visitors</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <small class="text-muted">Auto-refreshes every 5 minutes</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar - Stats & Overdue -->
+        <div class="col-xl-4 mb-4">
+            <!-- Overdue Visitors -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 bg-warning">
+                    <h6 class="m-0 fw-bold text-white">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Overdue Visitors
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if overdue_visitors %}
+                    <div class="list-group list-group-flush">
+                        {% for visitor in overdue_visitors %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ visitor.get_full_name }}</h6>
+                                <small class="text-danger">
+                                    {{ visitor.expected_duration }} min overdue
+                                </small>
+                            </div>
+                            <p class="mb-1 small">
+                                <i class="fas fa-building me-1"></i>{{ visitor.host.department }}
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <small>{{ visitor.badge_number }}</small>
+                                <a href="tel:{{ visitor.phone }}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-phone"></i> Call
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                        <p class="text-muted">No overdue visitors</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Top Hosts Today -->
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 fw-bold text-primary">
+                        <i class="fas fa-star me-2"></i>Top Hosts (Today)
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% for host in top_hosts_today %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ host.host__name }}</strong>
+                                <br>
+                                <small class="text-muted">{{ host.host__department }}</small>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{ host.count }}</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center py-3">No host data available</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Update Script -->
+<script>
+    let dashboardRefreshInterval;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all charts
+        initWeeklyTrendChart();
+        initVisitorTypeChart();
+        initHourlyChart();
+        initDepartmentChart();
+        
+        // Set up auto-refresh
+        startDashboardRefresh();
+        
+        // Update peak hour
+        updatePeakHour();
+    });
+    
+    function initWeeklyTrendChart() {
+        const weeklyData = {{ weekly_trend|safe }};
+        
+        const labels = weeklyData.map(item => item.day);
+        const totalData = weeklyData.map(item => item.total);
+        const checkedInData = weeklyData.map(item => item.checked_in);
+        const checkedOutData = weeklyData.map(item => item.checked_out);
+        
+        const ctx = document.getElementById('weeklyTrendChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total Visitors',
+                        data: totalData,
+                        borderColor: '#4e73df',
+                        backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Checked In',
+                        data: checkedInData,
+                        borderColor: '#1cc88a',
+                        backgroundColor: 'rgba(28, 200, 138, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Checked Out',
+                        data: checkedOutData,
+                        borderColor: '#36b9cc',
+                        backgroundColor: 'rgba(54, 185, 204, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function initVisitorTypeChart() {
+        const typeData = {{ today_visitor_types|safe }};
+        
+        // Process data for pie chart
+        const labels = typeData.map(item => {
+            const typeMap = {
+                'guest': 'Guest',
+                'contractor': 'Contractor',
+                'delivery': 'Delivery',
+                'interview': 'Interview',
+                'emergency': 'Emergency',
+                'other': 'Other'
+            };
+            return typeMap[item.visitor_type] || item.visitor_type;
+        });
+        
+        const data = typeData.map(item => item.count);
+        const backgroundColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'
+        ];
+        
+        const ctx = document.getElementById('visitorTypeChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: backgroundColors,
+                    hoverBackgroundColor: backgroundColors.map(color => color + 'CC'),
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                cutout: '70%',
+            },
+        });
+    }
+    
+    function initHourlyChart() {
+        const hourlyData = {{ hourly_data|safe }};
+        
+        const labels = hourlyData.map(item => item.hour);
+        const data = hourlyData.map(item => item.count);
+        
+        // Find peak hour
+        const maxCount = Math.max(...data);
+        const peakIndex = data.indexOf(maxCount);
+        document.getElementById('peakHour').textContent = labels[peakIndex];
+        
+        const ctx = document.getElementById('hourlyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Visitors',
+                    data: data,
+                    backgroundColor: data.map((count, index) => 
+                        index === peakIndex ? '#e74a3b' : '#4e73df'
+                    ),
+                    borderColor: data.map((count, index) => 
+                        index === peakIndex ? '#e74a3b' : '#4e73df'
+                    ),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            maxRotation: 45
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function initDepartmentChart() {
+        const deptData = {{ department_data|safe }};
+        
+        const labels = deptData.map(item => item.host__department || 'Unknown');
+        const data = deptData.map(item => item.count);
+        
+        const ctx = document.getElementById('departmentChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'horizontalBar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Visitors',
+                    data: data,
+                    backgroundColor: '#1cc88a',
+                    borderColor: '#1cc88a',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function updateChart(range) {
+        // This would make an AJAX call to get new data
+        console.log('Updating chart for range:', range);
+        // Implement AJAX call to fetch new chart data
+    }
+    
+    function exportChart() {
+        // Implement chart export functionality
+        console.log('Exporting chart data');
+    }
+    
+    function refreshDepartmentChart() {
+        // Implement department chart refresh
+        console.log('Refreshing department chart');
+    }
+    
+    function updatePeakHour() {
+        // Already updated in initHourlyChart
+    }
+    
+    function startDashboardRefresh() {
+        // Refresh dashboard every 5 minutes
+        dashboardRefreshInterval = setInterval(() => {
+            // In a real app, this would make an AJAX call to refresh data
+            console.log('Refreshing dashboard data...');
+            // location.reload(); // Simple reload for demo
+        }, 300000); // 5 minutes
+    }
+    
+    function stopDashboardRefresh() {
+        clearInterval(dashboardRefreshInterval);
+    }
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', stopDashboardRefresh);
+</script>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .chart-area {
+        position: relative;
+        height: 300px;
+        width: 100%;
+    }
+    
+    .chart-pie {
+        position: relative;
+        height: 250px;
+    }
+    
+    .chart-bar {
+        position: relative;
+        height: 250px;
+    }
+    
+    .card {
+        border-radius: 0.5rem;
+    }
+    
+    .border-left-primary {
+        border-left: 0.25rem solid #4e73df !important;
+    }
+    
+    .border-left-success {
+        border-left: 0.25rem solid #1cc88a !important;
+    }
+    
+    .border-left-info {
+        border-left: 0.25rem solid #36b9cc !important;
+    }
+    
+    .border-left-warning {
+        border-left: 0.25rem solid #f6c23e !important;
+    }
+    
+    .table td, .table th {
+        vertical-align: middle;
+    }
+    
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+    }
+    
+    .list-group-item:first-child {
+        border-top: none;
+    }
+    
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}

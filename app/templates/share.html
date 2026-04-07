@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dummy Event</title>
+
+<!-- Open Graph meta tags -->
+<meta property="og:title" content="Dummy Event">
+<meta property="og:description" content="Join us for a fun-filled experience with exciting activities and surprises!">
+<meta property="og:image" content="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80">
+<meta property="og:url" content="https://www.rsim.co.in">
+<meta property="og:type" content="website">
+
+<style>
+body { font-family: Arial; padding: 20px; }
+.event-box { max-width: 600px; margin: auto; text-align: center; }
+.event-img { width: 100%; height: auto; }
+.share-btn { margin-top: 20px; padding: 10px 20px; background: #25D366; color: white; border: none; cursor: pointer; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div class="event-box">
+    <h1>Dummy Event</h1>
+    <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" 
+         class="event-img" alt="Dummy Event Image">
+    <p>Join us for a fun-filled experience with exciting activities and surprises!</p>
+
+    <button class="share-btn" onclick="shareWhatsApp()">Share on WhatsApp</button>
+</div>
+
+<script>
+function shareWhatsApp() {
+    // Share the page URL (WhatsApp will fetch OG image + description automatically)
+    const pageURL = "https://example.com/dummy-event";
+    const text = encodeURIComponent("Check out this event: " + pageURL);
+    const whatsappURL = `https://wa.me/?text=${text}`;
+    window.open(whatsappURL, '_blank');
+}
+</script>
+
+</body>
+</html>
+
