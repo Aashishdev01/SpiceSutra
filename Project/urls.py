@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('contact/', views.contact_view, name='contact'),
+   path('login/', views.login_view, name='login'),
     path('add/', views.add_spice_collection, name='add_spice_collection'),
     # SpiceCollection CRUD
     path('spice-collections/', views.add_spice_collection, name='add_spice_collection'),
@@ -77,6 +78,7 @@ urlpatterns = [
     
     # Real-time updates
     path('api/realtime-updates/', views.RealTimeUpdatesView.as_view(), name='api_realtime_updates'),
+    
     
     # Other URLs...
 ]

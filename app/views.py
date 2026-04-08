@@ -290,6 +290,8 @@ def visitor_form(request):
     return render(request, 'visitor_form.html')
 
 
+
+
     
     
 
@@ -408,7 +410,7 @@ def share_event(request):
     return render(request, 'share.html')
 
 
-@csrf_exempt  # <- this disables CSRF for this view (only for testing or API endpoints)
+@csrf_exempt  # 
 def upload_image(request):
     if request.method == "POST" and request.FILES.get("image"):
         image = request.FILES["image"]
@@ -954,4 +956,27 @@ class RealTimeUpdatesView(LoginRequiredMixin, View):
         
         response.streaming_content = event_stream()
         return response
+    
+
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect("visitor_dashboard")  # 👈 dashboard
+        else:
+            return render(request, "login.html", {"error": "Invalid credentials"})
+
+    return render(request, "login.html")
+
+
+
     

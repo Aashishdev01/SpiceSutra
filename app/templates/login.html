@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Login</title>
+
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 10% 20%, #d4eaff, #b0d4f0, #8bc4e8);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 180px;
+      background: repeating-linear-gradient(90deg, 
+        rgba(255,255,245,0.25) 0px, 
+        rgba(255,255,245,0.25) 3px, 
+        transparent 3px, 
+        transparent 12px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -20%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(255,240,200,0.3) 0%, rgba(100,180,230,0.1) 70%);
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+    }
+
+    .bubble {
+      position: fixed;
+      background: rgba(255,255,250,0.35);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatBubble 20s infinite ease-in-out;
+    }
+    @keyframes floatBubble {
+      0% { transform: translateY(0) scale(1); opacity: 0.2; }
+      50% { transform: translateY(-60px) scale(1.1); opacity: 0.5; }
+      100% { transform: translateY(0) scale(1); opacity: 0.2; }
+    }
+
+    .login-card {
+      max-width: 520px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(2px);
+      border-radius: 2rem;
+      box-shadow: 0 30px 55px -20px rgba(0, 40, 60, 0.35), 0 0 0 1px rgba(255,255,255,0.8) inset;
+      overflow: hidden;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    .form-container {
+      padding: 2rem 2.2rem 2.2rem;
+    }
+
+    .merchant-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      border-bottom: 2px solid #e2f0ff;
+      padding-bottom: 1rem;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #1976d2, #42a5f5);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.6rem;
+      box-shadow: 0 8px 16px rgba(25,118,210,0.2);
+    }
+    .brand-text h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #0a4970, #1976d2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+      margin: 0;
+    }
+    .brand-text p {
+      font-size: 0.7rem;
+      color: #4a6f8f;
+      font-weight: 500;
+      margin: 0;
+    }
+    .trust-badge {
+      background: #eef5ff;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #1976d2;
+    }
+
+    .form-label {
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: #1e4a6e;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 0.5rem;
+    }
+    .form-label i {
+      margin-right: 6px;
+      color: #1976d2;
+    }
+    .form-control, .form-select {
+      border-radius: 1rem;
+      border: 1.5px solid #dceaf5;
+      padding: 0.85rem 1rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: #1976d2;
+      box-shadow: 0 0 0 3px rgba(25,118,210,0.1);
+    }
+    .form-control.is-invalid {
+      border-color: #d32f2f;
+      background-image: none;
+    }
+    .invalid-feedback {
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-primary-custom {
+      background: linear-gradient(105deg, #1565c0, #1976d2);
+      border: none;
+      padding: 0.9rem;
+      border-radius: 2rem;
+      font-weight: 800;
+      font-size: 1rem;
+      transition: 0.2s;
+      width: 100%;
+      color: white;
+    }
+    .btn-primary-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 22px rgba(25,118,210,0.4);
+      background: linear-gradient(105deg, #1565c0, #1976d2);
+    }
+    .btn-primary-custom:disabled {
+      opacity: 0.6;
+      transform: none;
+    }
+    .btn-outline-primary-custom {
+      background: white;
+      border: 1.5px solid #1976d2;
+      color: #1976d2;
+      padding: 0.85rem 1.5rem;
+      border-radius: 1rem;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+    .btn-outline-primary-custom:hover {
+      background: #1976d2;
+      color: white;
+    }
+    .nav-tabs-custom {
+      border-bottom: none;
+      gap: 0.5rem;
+      background: #f0f7ff;
+      padding: 0.5rem;
+      border-radius: 3rem;
+      margin-bottom: 1.5rem;
+    }
+    .nav-tabs-custom .nav-link {
+      border: none;
+      border-radius: 2rem;
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+      color: #5c7f9c;
+      transition: all 0.3s ease;
+    }
+    .nav-tabs-custom .nav-link i {
+      margin-right: 8px;
+    }
+    .nav-tabs-custom .nav-link.active {
+      background: linear-gradient(105deg, #1565c0, #1976d2);
+      color: white;
+      box-shadow: 0 4px 12px rgba(25,118,210,0.3);
+    }
+    .nav-tabs-custom .nav-link:not(.active):hover {
+      background: rgba(25,118,210,0.1);
+      color: #1976d2;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #1976d2;
+      background: white;
+      padding: 5px;
+      border-radius: 50%;
+      z-index: 10;
+    }
+    .otp-input-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .timer-text {
+      font-size: 0.75rem;
+      color: #1976d2;
+      margin-top: 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .resend-link {
+      color: #1976d2;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .info-alert {
+      background: #e3f2fd;
+      color: #1565c0;
+      border: none;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      padding: 10px;
+      margin-top: 1rem;
+    }
+    .dashboard-card {
+      background: #f0f8ff;
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      border-left: 5px solid #1976d2;
+    }
+    .dashboard-item {
+      display: flex;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #cde5f5;
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+    }
+    .dashboard-item i {
+      width: 28px;
+      color: #1976d2;
+    }
+    .btn-logout {
+      background: #f0f6ff;
+      color: #1976d2;
+      border: 1px solid #cde5f5;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    .btn-logout:hover {
+      background: white;
+      border-color: #1976d2;
+      transform: translateY(-2px);
+    }
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .form-container { padding: 1.5rem; }
+      .otp-input-wrapper { flex-direction: column; }
+      .btn-outline-primary-custom { width: 100%; }
+      .nav-tabs-custom{background:#fff;}
+    } 
+    .success-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+}
+
+.popup-card {
+  background: #fff;
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 15px;
+  color: #1976d2;
+  animation: scaleUp 0.4s ease;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+  </style>
+</head>
+<body>
+
+<div class="bubble" style="width: 280px; height: 280px; bottom: -80px; left: -80px; animation-duration: 24s;"></div>
+<div class="bubble" style="width: 200px; height: 200px; top: 20%; right: -60px; animation-duration: 18s;"></div>
+<div class="bubble" style="width: 150px; height: 150px; bottom: 30%; left: 80%; animation-duration: 28s;"></div>
+
+<div class="login-card">
+  <div class="form-container">
+    <div class="merchant-header">
+      <div class="logo-area">
+        <div class="logo-icon"><i class="fas fa-mortar-pestle"></i></div>
+        <div class="brand-text">
+          <h2>Masala Merchant</h2>
+          <p> Login Portal</p>
+        </div>
+      </div>
+      <div class="trust-badge"><i class="fas fa-shield-alt me-2"></i>Login Form</div>
+    </div>
+
+    <ul class="nav nav-tabs-custom" id="loginTab" role="tablist">
+      <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100 active" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-content" type="button" role="tab">
+          <i class="fas fa-lock"></i> Password Login
+        </button>
+      </li>
+      <li class="nav-item flex-fill" role="presentation">
+        <button class="nav-link w-100" id="otp-tab" data-bs-toggle="tab" data-bs-target="#otp-content" type="button" role="tab">
+          <i class="fas fa-key"></i> OTP Login
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+    {% if error %}
+  <div class="alert alert-danger mt-2">
+    {{ error }}
+  </div>
+{% endif %}
+      <form method="POST">
+  {% csrf_token %}
+
+  <div class="tab-pane fade show active" id="password-content" role="tabpanel">
+    
+    <div class="mb-3">
+      <label class="form-label">
+        <i class="fas fa-envelope"></i> Email / Mobile Number
+      </label>
+      <input type="text" name="username" class="form-control" id="loginId"
+        placeholder="Enter registered email or mobile number">
+      <div class="invalid-feedback" id="loginIdError"></div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">
+        <i class="fas fa-lock"></i> Password
+      </label>
+      <div class="password-wrapper">
+        <input type="password" name="password" class="form-control" id="password"
+          placeholder="Enter your password">
+        <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+      </div>
+      <div class="invalid-feedback" id="passwordError"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary-custom">
+      Login with Password
+    </button>
+
+  </div>
+</form>
+
+      
+      <div class="tab-pane fade" id="otp-content" role="tabpanel">
+       
+       
+        <div class="tab-content">
+         
+          <div class="tab-pane fade show active" id="mobile-otp" role="tabpanel">
+            <div class="mb-3">
+              <label class="form-label"><i class="fas fa-mobile-alt"></i> Mobile Number</label>
+              <input type="tel" class="form-control" id="mobileNumber" placeholder="+91 98765 43210 or 9876543210">
+              <div class="invalid-feedback" id="mobileError"></div>
+            </div>
+            
+            <div id="mobileOtpSection" style="display: none;">
+              <div class="mb-3">
+                <label class="form-label"><i class="fas fa-key"></i> One Time Password (OTP)</label>
+                <div class="otp-input-wrapper">
+                  <input type="text" class="form-control otp-input" id="mobileOtpCode" placeholder="Enter 6-digit OTP" maxlength="6" style="flex:1; text-align:center; letter-spacing:2px;">
+                  <button class="btn btn-outline-primary-custom" id="verifyMobileOtpBtn" style="white-space: nowrap;">
+                    <i class="fas fa-check-circle"></i> Verify
+                  </button>
+                </div>
+                <div class="invalid-feedback" id="mobileOtpError"></div>
+                <div id="mobileTimerDisplay" class="timer-text"></div>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary-custom" id="sendMobileOtpBtn">
+              <i class="fas fa-paper-plane me-2"></i> Send OTP to Mobile
+            </button>
+          </div>
+
+        
+          <div class="tab-pane fade" id="email-otp" role="tabpanel">
+            <div class="mb-3">
+              <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+              <input type="email" class="form-control" id="emailAddress" placeholder="merchant@masala.com">
+              <div class="invalid-feedback" id="emailError"></div>
+            </div>
+            
+            <div id="emailOtpSection" style="display: none;">
+              <div class="mb-3">
+                <label class="form-label"><i class="fas fa-key"></i> One Time Password (OTP)</label>
+                <div class="otp-input-wrapper">
+                  <input type="text" class="form-control otp-input" id="emailOtpCode" placeholder="Enter 6-digit OTP" maxlength="6" style="flex:1; text-align:center; letter-spacing:2px;">
+                  <button class="btn btn-outline-primary-custom" id="verifyEmailOtpBtn" style="white-space: nowrap;">
+                    <i class="fas fa-check-circle"></i> Verify
+                  </button>
+                </div>
+                <div class="invalid-feedback" id="emailOtpError"></div>
+                <div id="emailTimerDisplay" class="timer-text"></div>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary-custom" id="sendEmailOtpBtn">
+              <i class="fas fa-paper-plane me-2"></i> Send OTP to Email
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+    
+
+  
+ 
+ <div id="successPopup" class="success-popup">
+  
+  <div class="popup-card text-center">
+    
+    <lottie-player
+      src="https://assets9.lottiefiles.com/packages/lf20_touohxv0.json"
+      background="transparent"
+      speed="1"
+      
+      autoplay>
+    </lottie-player>
+
+    <h4 class="text-success">
+      🎉 Congratulations <span id="userName"></span>!
+    </h4>
+
+    <p>
+      You have successfully logged in via 
+      <span id="loginMethod"></span>
+    </p>
+
+  </div>
+</div>
+    
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  
+  let mobileGeneratedOtp = null;
+  let emailGeneratedOtp = null;
+  let mobileTimerInterval = null;
+  let emailTimerInterval = null;
+  let mobileTimeLeft = 0;
+  let emailTimeLeft = 0;
+  let isLoggedIn = false;
+
+  
+  const DEMO_EMAIL = "merchant@masala.com";
+  const DEMO_PASSWORD = "masala123";
+  const DEMO_MOBILE = "+919876543210";
+
+ 
+  const dashboardSection = document.getElementById('dashboardSection');
+  const dashboardName = document.getElementById('dashboardName');
+  const dashboardCredential = document.getElementById('dashboardCredential');
+  const loginTimeSpan = document.getElementById('loginTime');
+
+
+  const loginId = document.getElementById('loginId');
+  const password = document.getElementById('password');
+  const loginIdError = document.getElementById('loginIdError');
+  const passwordError = document.getElementById('passwordError');
+  const passwordLoginBtn = document.getElementById('passwordLoginBtn');
+  const togglePassword = document.getElementById('togglePassword');
+
+  
+  const mobileInput = document.getElementById('mobileNumber');
+  const mobileError = document.getElementById('mobileError');
+  const mobileOtpSection = document.getElementById('mobileOtpSection');
+  const mobileOtpInput = document.getElementById('mobileOtpCode');
+  const mobileOtpError = document.getElementById('mobileOtpError');
+  const sendMobileOtpBtn = document.getElementById('sendMobileOtpBtn');
+  const verifyMobileOtpBtn = document.getElementById('verifyMobileOtpBtn');
+  const mobileTimerDisplay = document.getElementById('mobileTimerDisplay');
+
+  
+  const emailInput = document.getElementById('emailAddress');
+  const emailError = document.getElementById('emailError');
+  const emailOtpSection = document.getElementById('emailOtpSection');
+  const emailOtpInput = document.getElementById('emailOtpCode');
+  const emailOtpError = document.getElementById('emailOtpError');
+  const sendEmailOtpBtn = document.getElementById('sendEmailOtpBtn');
+  const verifyEmailOtpBtn = document.getElementById('verifyEmailOtpBtn');
+  const emailTimerDisplay = document.getElementById('emailTimerDisplay');
+
+
+  function isValidMobile(mobile) {
+    const cleaned = mobile.replace(/\s/g, '');
+    const regex = /^(\+91|91|0)?[6-9]\d{9}$/;
+    return regex.test(cleaned);
+  }
+
+  function normalizeMobile(mobile) {
+    let cleaned = mobile.replace(/\s/g, '');
+    if (cleaned.startsWith('+91')) return cleaned;
+    if (cleaned.startsWith('91')) return '+' + cleaned;
+    if (cleaned.startsWith('0')) return '+91' + cleaned.substring(1);
+    return '+91' + cleaned;
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email);
+  }
+
+  function generateOtp() {
+    return "123456";
+  }
+
+
+  function onPasswordLogin() {
+    const identifier = loginId.value.trim();
+    const pwd = password.value.trim();
+
+    let hasError = false;
+    if (!identifier) {
+      loginIdError.textContent = 'Email or mobile number is required';
+      loginId.classList.add('is-invalid');
+      hasError = true;
+    } else {
+      loginId.classList.remove('is-invalid');
+      loginIdError.textContent = '';
+    }
+
+    if (!pwd) {
+      passwordError.textContent = 'Password is required';
+      password.classList.add('is-invalid');
+      hasError = true;
+    } else {
+      password.classList.remove('is-invalid');
+      passwordError.textContent = '';
+    }
+
+    if (hasError) return;
+
+    let isValid = false;
+    let credential = identifier;
+
+    if (identifier.toLowerCase() === DEMO_EMAIL && pwd === DEMO_PASSWORD) {
+      isValid = true;
+      credential = DEMO_EMAIL;
+    } else if (normalizeMobile(identifier) === DEMO_MOBILE && pwd === DEMO_PASSWORD) {
+      isValid = true;
+      credential = DEMO_MOBILE;
+    } else if (isValidMobile(identifier) && pwd === DEMO_PASSWORD) {
+      isValid = true;
+      credential = normalizeMobile(identifier);
+    } else if (isValidEmail(identifier) && pwd === DEMO_PASSWORD) {
+      isValid = true;
+      credential = identifier;
+    }
+
+    if (isValid) {
+      completeLogin('password', credential);
+    } else {
+      passwordError.textContent = 'Invalid credentials. Use merchant@masala.com / masala123';
+      password.classList.add('is-invalid');
+      loginId.classList.add('is-invalid');
+    }
+  }
+
+  function stopMobileTimer() {
+    if (mobileTimerInterval) {
+      clearInterval(mobileTimerInterval);
+      mobileTimerInterval = null;
+    }
+  }
+
+  function startMobileTimer(seconds) {
+    mobileTimeLeft = seconds;
+    updateMobileTimerDisplay();
+    if (mobileTimerInterval) clearInterval(mobileTimerInterval);
+    mobileTimerInterval = setInterval(() => {
+      if (mobileTimeLeft <= 1) {
+        clearInterval(mobileTimerInterval);
+        mobileTimerInterval = null;
+        mobileTimerDisplay.innerHTML = '<span class="resend-link" id="mobileResendLink">Resend OTP</span>';
+        const resendLink = document.getElementById('mobileResendLink');
+        if (resendLink) resendLink.onclick = () => resendMobileOtp();
+      } else {
+        mobileTimeLeft--;
+        updateMobileTimerDisplay();
+      }
+    }, 1000);
+  }
+
+  function updateMobileTimerDisplay() {
+    if (mobileTimeLeft > 0) {
+      mobileTimerDisplay.innerHTML = `<i class="fas fa-clock"></i> OTP expires in ${mobileTimeLeft} seconds`;
+    }
+  }
+
+  function sendMobileOtp() {
+    const mobile = mobileInput.value.trim();
+    mobileGeneratedOtp = generateOtp();
+    console.log(`[DEMO] Mobile OTP for ${mobile}: ${mobileGeneratedOtp}`);
+    mobileTimerDisplay.innerHTML = `<i class="fas fa-envelope"></i> OTP sent to ${normalizeMobile(mobile)} (Demo: 123456)`;
+    startMobileTimer(60);
+    return true;
+  }
+
+  function resendMobileOtp() {
+    const mobile = mobileInput.value.trim();
+    if (!mobile || !isValidMobile(mobile)) {
+      mobileError.textContent = 'Please enter a valid mobile number';
+      mobileInput.classList.add('is-invalid');
+      return;
+    }
+    mobileError.textContent = '';
+    mobileInput.classList.remove('is-invalid');
+    mobileOtpInput.value = '';
+    mobileOtpError.textContent = '';
+    sendMobileOtp();
+  }
+
+  function onSendMobileOtp() {
+    const mobile = mobileInput.value.trim();
+    if (!mobile) {
+      mobileError.textContent = 'Mobile number is required';
+      mobileInput.classList.add('is-invalid');
+      return;
+    }
+    if (!isValidMobile(mobile)) {
+      mobileError.textContent = 'Enter valid Indian mobile (10 digits, starts with 6-9)';
+      mobileInput.classList.add('is-invalid');
+      return;
+    }
+    mobileError.textContent = '';
+    mobileInput.classList.remove('is-invalid');
+    mobileOtpSection.style.display = 'block';
+    sendMobileOtpBtn.innerHTML = '<i class="fas fa-spinner fa-pulse me-2"></i> OTP Sent';
+    sendMobileOtpBtn.disabled = true;
+    sendMobileOtp();
+    setTimeout(() => {
+      sendMobileOtpBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Resend OTP';
+      sendMobileOtpBtn.disabled = false;
+      sendMobileOtpBtn.onclick = () => {
+        if (mobileTimeLeft <= 0) resendMobileOtp();
+        else mobileTimerDisplay.innerHTML = `<span style="color:#d32f2f;">Please wait ${mobileTimeLeft}s</span>`;
+      };
+    }, 2000);
+  }
+
+  function onVerifyMobileOtp() {
+    const enteredOtp = mobileOtpInput.value.trim();
+    if (!enteredOtp) {
+      mobileOtpError.textContent = 'Please enter OTP';
+      mobileOtpInput.classList.add('is-invalid');
+      return;
+    }
+    if (!/^\d{6}$/.test(enteredOtp)) {
+      mobileOtpError.textContent = 'OTP must be 6 digits';
+      mobileOtpInput.classList.add('is-invalid');
+      return;
+    }
+    if (enteredOtp === mobileGeneratedOtp || enteredOtp === "123456") {
+      mobileOtpError.textContent = '';
+      mobileOtpInput.classList.remove('is-invalid');
+      completeLogin('otp', normalizeMobile(mobileInput.value.trim()));
+    } else {
+      mobileOtpError.textContent = 'Invalid OTP. Demo OTP: 123456';
+      mobileOtpInput.classList.add('is-invalid');
+    }
+  }
+
+
+  function stopEmailTimer() {
+    if (emailTimerInterval) {
+      clearInterval(emailTimerInterval);
+      emailTimerInterval = null;
+    }
+  }
+
+  function startEmailTimer(seconds) {
+    emailTimeLeft = seconds;
+    updateEmailTimerDisplay();
+    if (emailTimerInterval) clearInterval(emailTimerInterval);
+    emailTimerInterval = setInterval(() => {
+      if (emailTimeLeft <= 1) {
+        clearInterval(emailTimerInterval);
+        emailTimerInterval = null;
+        emailTimerDisplay.innerHTML = '<span class="resend-link" id="emailResendLink">Resend OTP</span>';
+        const resendLink = document.getElementById('emailResendLink');
+        if (resendLink) resendLink.onclick = () => resendEmailOtp();
+      } else {
+        emailTimeLeft--;
+        updateEmailTimerDisplay();
+      }
+    }, 1000);
+  }
+
+  function updateEmailTimerDisplay() {
+    if (emailTimeLeft > 0) {
+      emailTimerDisplay.innerHTML = `<i class="fas fa-clock"></i> OTP expires in ${emailTimeLeft} seconds`;
+    }
+  }
+
+  function sendEmailOtp() {
+    const email = emailInput.value.trim();
+    emailGeneratedOtp = generateOtp();
+    console.log(`[DEMO] Email OTP for ${email}: ${emailGeneratedOtp}`);
+    emailTimerDisplay.innerHTML = `<i class="fas fa-envelope"></i> OTP sent to ${email} (Demo: 123456)`;
+    startEmailTimer(60);
+    return true;
+  }
+
+  function resendEmailOtp() {
+    const email = emailInput.value.trim();
+    if (!email || !isValidEmail(email)) {
+      emailError.textContent = 'Please enter a valid email address';
+      emailInput.classList.add('is-invalid');
+      return;
+    }
+    emailError.textContent = '';
+    emailInput.classList.remove('is-invalid');
+    emailOtpInput.value = '';
+    emailOtpError.textContent = '';
+    sendEmailOtp();
+  }
+
+  function onSendEmailOtp() {
+    const email = emailInput.value.trim();
+    if (!email) {
+      emailError.textContent = 'Email address is required';
+      emailInput.classList.add('is-invalid');
+      return;
+    }
+    if (!isValidEmail(email)) {
+      emailError.textContent = 'Enter valid email (e.g., name@domain.com)';
+      emailInput.classList.add('is-invalid');
+      return;
+    }
+    emailError.textContent = '';
+    emailInput.classList.remove('is-invalid');
+    emailOtpSection.style.display = 'block';
+    sendEmailOtpBtn.innerHTML = '<i class="fas fa-spinner fa-pulse me-2"></i> OTP Sent';
+    sendEmailOtpBtn.disabled = true;
+    sendEmailOtp();
+    setTimeout(() => {
+      sendEmailOtpBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Resend OTP';
+      sendEmailOtpBtn.disabled = false;
+      sendEmailOtpBtn.onclick = () => {
+        if (emailTimeLeft <= 0) resendEmailOtp();
+        else emailTimerDisplay.innerHTML = `<span style="color:#d32f2f;">Please wait ${emailTimeLeft}s</span>`;
+      };
+    }, 2000);
+  }
+
+  function onVerifyEmailOtp() {
+    const enteredOtp = emailOtpInput.value.trim();
+    if (!enteredOtp) {
+      emailOtpError.textContent = 'Please enter OTP';
+      emailOtpInput.classList.add('is-invalid');
+      return;
+    }
+    if (!/^\d{6}$/.test(enteredOtp)) {
+      emailOtpError.textContent = 'OTP must be 6 digits';
+      emailOtpInput.classList.add('is-invalid');
+      return;
+    }
+    if (enteredOtp === emailGeneratedOtp || enteredOtp === "123456") {
+      emailOtpError.textContent = '';
+      emailOtpInput.classList.remove('is-invalid');
+      completeLogin('otp', emailInput.value.trim());
+    } else {
+      emailOtpError.textContent = 'Invalid OTP. Demo OTP: 123456';
+      emailOtpInput.classList.add('is-invalid');
+    }
+  }
+function startConfetti() {
+  const duration = Infinity; // unlimited 😎
+  const animationEnd = Date.now() + duration;
+
+  const defaults = {
+    startVelocity: 30,
+    spread: 360,
+    ticks: 60,
+    zIndex: 9999
+  };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  (function frame() {
+    confetti(Object.assign({}, defaults, {
+      particleCount: 5,
+      origin: { x: Math.random(), y: Math.random() - 0.2 }
+    }));
+
+    requestAnimationFrame(frame);
+  })();
+}
+let confettiRunning = false;
+
+function startConfettiControlled() {
+  if (confettiRunning) return;
+  confettiRunning = true;
+
+  (function frame() {
+    if (!confettiRunning) return;
+
+    confetti({
+      particleCount: 6,
+      spread: 360,
+      origin: {
+        x: Math.random(),
+        y: Math.random() - 0.2
+      }
+    });
+
+    requestAnimationFrame(frame);
+  })();
+}
+
+function stopConfetti() {
+  confettiRunning = false;
+}
+function completeLogin(method, credential) {
+  isLoggedIn = true;
+
+  document.getElementById("userName").innerText = "Masala Merchant";
+
+  document.getElementById("loginMethod").innerText =
+    method === 'password'
+      ? `Password (${credential})`
+      : `OTP (${credential})`;
+
+startConfettiControlled();
+
+  // 3 sec baad stop
+  setTimeout(() => {
+    stopConfetti();
+    dashboardSection.style.display = "block";
+  }, 1000);
+  const popup = document.getElementById("successPopup");
+  popup.style.display = "flex";
+
+  // Auto close after 2.5 sec
+  setTimeout(() => {
+    popup.style.display = "none";
+    dashboardSection.style.display = "block";
+  }, 2500);
+
+  stopMobileTimer();
+  stopEmailTimer();
+}
+
+  function onLogout() {
+    isLoggedIn = false;
+    dashboardSection.style.display = 'none';
+    document.querySelector('.tab-content').style.display = 'block';
+    document.querySelector('.nav-tabs-custom').style.display = 'flex';
+    
+
+    loginId.value = '';
+    password.value = '';
+    loginId.classList.remove('is-invalid');
+    password.classList.remove('is-invalid');
+    mobileInput.value = '';
+    mobileOtpInput.value = '';
+    mobileOtpSection.style.display = 'none';
+    mobileOtpInput.classList.remove('is-invalid');
+    emailInput.value = '';
+    emailOtpInput.value = '';
+    emailOtpSection.style.display = 'none';
+    emailOtpInput.classList.remove('is-invalid');
+    sendMobileOtpBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Send OTP to Mobile';
+    sendMobileOtpBtn.disabled = false;
+    sendEmailOtpBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Send OTP to Email';
+    sendEmailOtpBtn.disabled = false;
+    mobileGeneratedOtp = null;
+    emailGeneratedOtp = null;
+    
+
+    const passwordTab = new bootstrap.Tab(document.getElementById('password-tab'));
+    passwordTab.show();
+  }
+
+
+  togglePassword.addEventListener('click', () => {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    togglePassword.classList.toggle('fa-eye');
+    togglePassword.classList.toggle('fa-eye-slash');
+  });
+
+  
+  passwordLoginBtn.addEventListener('click', onPasswordLogin);
+  sendMobileOtpBtn.addEventListener('click', onSendMobileOtp);
+  verifyMobileOtpBtn.addEventListener('click', onVerifyMobileOtp);
+  sendEmailOtpBtn.addEventListener('click', onSendEmailOtp);
+  verifyEmailOtpBtn.addEventListener('click', onVerifyEmailOtp);
+  
+
+  loginId.addEventListener('keypress', (e) => { if (e.key === 'Enter') onPasswordLogin(); });
+  password.addEventListener('keypress', (e) => { if (e.key === 'Enter') onPasswordLogin(); });
+  mobileInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && mobileOtpSection.style.display !== 'block') onSendMobileOtp(); });
+  mobileOtpInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') onVerifyMobileOtp(); });
+  emailInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && emailOtpSection.style.display !== 'block') onSendEmailOtp(); });
+  emailOtpInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') onVerifyEmailOtp(); });
+  
+  document.addEventListener('click', (e) => { if (e.target.id === 'logoutBtn') onLogout(); });
+  
+  const passwordTab = document.getElementById('password-tab');
+  const otpTab = document.getElementById('otp-tab');
+  const mobileOtpTab = document.getElementById('mobile-otp-tab');
+  const emailOtpTab = document.getElementById('email-otp-tab');
+  
+
+  passwordTab.addEventListener('shown.bs.tab', () => {
+    resetOtpSections();
+  });
+  otpTab.addEventListener('shown.bs.tab', () => {
+    resetOtpSections();
+  });
+  mobileOtpTab.addEventListener('shown.bs.tab', () => {
+    resetMobileOtpSection();
+  });
+  emailOtpTab.addEventListener('shown.bs.tab', () => {
+    resetEmailOtpSection();
+  });
+  
+  function resetOtpSections() {
+    resetMobileOtpSection();
+    resetEmailOtpSection();
+  }
+  
+  function resetMobileOtpSection() {
+    mobileOtpSection.style.display = 'none';
+    mobileOtpInput.value = '';
+    mobileOtpError.textContent = '';
+    mobileTimerDisplay.innerHTML = '';
+    sendMobileOtpBtn.innerHTML = ' Send OTP to Mobile';
+    sendMobileOtpBtn.disabled = false;
+    stopMobileTimer();
+  }
+  
+  function resetEmailOtpSection() {
+    emailOtpSection.style.display = 'none';
+    emailOtpInput.value = '';
+    emailOtpError.textContent = '';
+    emailTimerDisplay.innerHTML = '';
+    sendEmailOtpBtn.innerHTML = ' Send OTP to Email';
+    sendEmailOtpBtn.disabled = false;
+    stopEmailTimer();
+  }
+</script>
+</body>
+</html>

@@ -23,6 +23,12 @@ admin.site.register(Product)
 admin.site.register(Story)
 admin.site.register(ContactMessage)
 
+# merchant/admin.py
+from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+
+
+
 # Register Testimonial with customization
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
